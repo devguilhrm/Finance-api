@@ -1,4 +1,4 @@
-# 💰 Finance API - Enterprise Grade
+#  Finance API - Enterprise Grade
 
 [![NestJS](https://img.shields.io/badge/NestJS-10.x-E0234E?style=for-the-badge&logo=nestjs&logoColor=white)](https://nestjs.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -23,22 +23,24 @@
 - [📖 Documentação da API](#-documentação-da-api)
 - [🧪 Testes & Qualidade](#-testes--qualidade)
 - [📂 Estrutura do Projeto](#-estrutura-do-projeto)
+
 ---
 
 ## 🚀 Visão Geral
 
-O **Finance API**  É uma plataforma backend completa que demonstra domínio sobre:
+O **Finance API** é uma plataforma backend completa que demonstra domínio sobre:
+
 1.  **Segurança Avançada**: Implementação de Refresh Tokens rotativos, proteção contra força bruta (Rate Limiting) e sanitização de inputs.
 2.  **Arquitetura Escalável**: Separação clara de responsabilidades (Modules), uso de Message Brokers (RabbitMQ/Kafka) para desacoplamento e Prisma ORM para type-safety no banco de dados.
 3.  **Controle de Acesso (RBAC)**: Sistema granular de permissões (`ADMIN`, `MANAGER`, `USER`) protegendo rotas críticas.
 
-Priorizando alta integridade de dados financeiros.
+O projeto prioriza a alta integridade de dados financeiros e segue as melhores práticas de desenvolvimento moderno.
 
 ---
 
 ## 🏗️ Arquitetura do Sistema
 
-mermaid
+```mermaid
 graph TD
     Client[Client App / Mobile] -->|HTTPS| LB[Load Balancer / Nginx]
     LB --> API[NestJS API Cluster]
@@ -60,11 +62,11 @@ graph TD
 ```
 
 ### Fluxo de Autenticação Seguro
-1.  **Login**: Usuário envia credenciais → API valida → Retorna `AccessToken` (15min) + `RefreshToken` (7d, HttpOnly).
+1.  **Login**: Usuário envia credenciais → API valida → Retorna `AccessToken` (15min) + `RefreshToken` (7d).
 2.  **Acesso**: Cliente usa `AccessToken` no Header `Authorization: Bearer ...`.
-3.  **Renovação**: Quando o Access expira, cliente usa `RefreshToken` na rota `/auth/refresh`.
+3.  **Renovação**: Quando o Access expira, o cliente usa `RefreshToken` na rota `/auth/refresh`.
 4.  **Rotação**: O Refresh Token antigo é invalidado no banco e um novo é emitido (prevenção contra replay attacks).
-5.  **Evento**: Cada ação de auth dispara um evento assíncrono para auditoria.
+5.  **Evento**: Cada ação de auth dispara um evento assíncrono para auditoria via Broker.
 
 ---
 
@@ -77,7 +79,7 @@ graph TD
 - [x] Logout seguro (invalidação de token no servidor).
 - [x] **RBAC**: Guards decorativos (`@Roles('ADMIN')`).
 
-###  Gestão Financeira
+### 💸 Gestão Financeira
 - [x] CRUD de Transações (Receitas/Despesas).
 - [x] Categorização automática.
 - [x] Endpoint de Resumo (`/summary`) com agregações SQL otimizadas.
@@ -105,7 +107,7 @@ graph TD
 | **Linguagem** | TypeScript 5 | Type-safety, manutenibilidade, DX superior. |
 | **Database** | PostgreSQL 16 | ACID compliance, confiabilidade para dados financeiros. |
 | **ORM** | Prisma | Type-safety no DB, migrations fáceis, auto-complete. |
-| **Auth** | Passport + JWT | Padrão da indústria, flexível para strategies múltiplas. |
+| **Auth** | Passport + JWT | Padrão da indústria, flexível para múltiplas strategies. |
 | **Broker** | RabbitMQ / Kafka | Desacoplamento de serviços, alta throughput de eventos. |
 | **Validação** | class-validator | Validação declarativa baseada em decorators. |
 | **Docs** | Swagger (OpenAPI) | Documentação interativa gerada automaticamente. |
@@ -120,7 +122,7 @@ A maneira mais rápida de rodar o projeto localmente.
 
 ### 1. Clone e Configure
 ```bash
-git clone https://github.com/seu-usuario/finance-api.git
+git clone https://github.com/devguilhrm/finance-api.git
 cd finance-api
 cp .env.example .env
 ```
@@ -152,7 +154,10 @@ docker-compose exec api npx prisma migrate deploy
 1. **Registrar/Login**:
    ```json
    POST /auth/login
-   { "email": "admin@finance.com", "password": "Secret123!" }
+   { 
+     "email": "admin@finance.com", 
+     "password": "Secret123!" 
+   }
    
    # Resposta:
    {
@@ -212,11 +217,14 @@ A API publica eventos críticos no broker configurado (RabbitMQ por padrão). Is
   "email": "user@example.com",
   "role": "USER",
   "timestamp": "2024-05-12T14:30:00.000Z",
-  "metadata": { "ip": "192.168.1.1", "userAgent": "Mozilla/5.0..." }
+  "metadata": { 
+    "ip": "192.168.1.1", 
+    "userAgent": "Mozilla/5.0..." 
+  }
 }
 ```
 
-*Para mudar para Kafka, altere `BROKER_TYPE=kafka` no `.env`.*
+> *Para mudar para Kafka, altere `BROKER_TYPE=kafka` no arquivo `.env`.*
 
 ---
 
@@ -226,7 +234,7 @@ A documentação completa e interativa está disponível via Swagger UI.
 
 1. Inicie o projeto.
 2. Acesse `http://localhost:3000/api`.
-3. Clique em **"Authorize"** e insira seu token JWT (prefixo `Bearer ` não é necessário no campo do Swagger, ele adiciona automaticamente).
+3. Clique em **"Authorize"** e insira seu token JWT (o prefixo `Bearer ` é adicionado automaticamente pelo Swagger).
 
 ### Endpoints Principais
 
@@ -284,17 +292,10 @@ src/
 
 ---
 
-### Padrões de Código
-- Use `npm run lint` antes de commitar.
-- Mantenha a cobertura de testes acima de 80%.
-- Siga o Conventional Commits.
-
----
-
 ## 📄 Licença
 
 Distribuído sob a licença MIT. Veja `LICENSE` para mais informações.
 
 ---
 
-**Feito por devguilhrm**
+**Feito por [devguilhrm](https://github.com/devguilhrm)**
