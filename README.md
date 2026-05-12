@@ -23,8 +23,6 @@
 - [📖 Documentação da API](#-documentação-da-api)
 - [🧪 Testes & Qualidade](#-testes--qualidade)
 - [📂 Estrutura do Projeto](#-estrutura-do-projeto)
-- [🤝 Contribuindo](#-contribuindo)
-
 ---
 
 ## 🚀 Visão Geral
